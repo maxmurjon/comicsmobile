@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
   final String baseUrl = 'http://18.197.178.186:8000'; // Backend URL
@@ -24,6 +23,10 @@ class AuthService {
       'password': password,
     };
 
+    // Print the request data in terminal
+    print('Request Body for SignUp:');
+    print(jsonEncode(body));
+
     try {
       final response = await http.post(
         url,
@@ -31,12 +34,20 @@ class AuthService {
         body: jsonEncode(body),
       );
 
+      // Print the response data in terminal
+      print('Response Status: ${response.statusCode}');
+      print('Response Body: ${response.body}');
+
       if (response.statusCode == 200 || response.statusCode == 201) {
+        // Successfully registered
         return jsonDecode(response.body);
       } else {
+        // Handle error response
         return {'error': 'Failed to sign up'};
       }
     } catch (e) {
+      // Catch network or other errors
+      print('Error: $e');  // Print error in terminal
       return {'error': e.toString()};
     }
   }
@@ -54,52 +65,28 @@ class AuthService {
     };
 
     try {
+      // Request data for sign in
+      print('Request URL for SignIn: $url');
+      print('Request Body: ${jsonEncode(body)}');
+
       final response = await http.post(
         url,
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(body),
       );
 
+      // Print the response data in terminal
+      print('Response Status Code: ${response.statusCode}');
+      print('Response Body: ${response.body}');
+
       if (response.statusCode == 200 || response.statusCode == 201) {
-        final responseData = jsonDecode(response.body);
-
-        // Saqlash uchun shared_preferences kutubxonasidan foydalanamiz
-        final prefs = await SharedPreferences.getInstance();
-
-        // Token va user_id saqlash
-        await prefs.setString('token', responseData['token']);  // tokenni saqlash
-        await prefs.setString('user_id', responseData['user_id']);  // user_idni saqlash
-
-        return responseData;
+        return jsonDecode(response.body);
       } else {
         return {'error': 'Invalid credentials'};
       }
     } catch (e) {
+      print('Error: $e'); // Print error in terminal
       return {'error': e.toString()};
     }
-  }
-
-  // Tokenni olish uchun yordamchi metod
-  Future<String?> getToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('token');
-  }
-
-  // User ID ni olish uchun yordamchi metod
-  Future<String?> getUserId() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('user_id');
-  }
-
-  // Tokenni o'chirish uchun metod
-  Future<void> removeToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('token');
-  }
-
-  // User ID ni o'chirish uchun metod
-  Future<void> removeUserId() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('user_id');
   }
 }

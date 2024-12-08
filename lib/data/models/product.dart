@@ -3,23 +3,24 @@ class Product {
   final String name;
   final String description;
   final double price;
-  final String? imageUrl;
+  final List<String> imageUrls; // Ro'yxat sifatida o'zgartirildi
 
   Product({
     required this.id,
     required this.name,
     required this.description,
     required this.price,
-    this.imageUrl,
+    required this.imageUrls,
   });
 
-  factory Product.fromJson(Map<String, dynamic> json, String? imageUrl) {
+  /// JSON-dan Product yaratish
+  factory Product.fromJson(Map<String, dynamic> json, List<String> imageUrls) {
     return Product(
       id: json['id'],
       name: json['name'],
-      description: json['description'],
-      price: json['price'],
-      imageUrl: imageUrl,
+      description: json['description'] ?? '', // Default qiymat
+      price: (json['price'] as num).toDouble(),
+      imageUrls: imageUrls, // JSON bilan kelgan rasm URLlari ro'yxati
     );
   }
 }

@@ -27,22 +27,36 @@ class _ProductGridState extends State<ProductGrid> {
         future: futureProducts,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator()); // Loading
+            // Yuklanmoqda
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}')); // Error
+            // Xato yuz berganda
+            return Center(
+              child: Text(
+                'Xato yuz berdi: ${snapshot.error}',
+                style: const TextStyle(color: Colors.red),
+              ),
+            );
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('No products found.')); // No data
+            // Mahsulotlar yo'q bo'lsa
+            return const Center(
+              child: Text(
+                'Mahsulot topilmadi.',
+                style: TextStyle(fontSize: 16, color: Colors.black54),
+              ),
+            );
           } else {
+            // Mahsulotlar ro‘yxati
             final products = snapshot.data!;
             return GridView.builder(
               shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
+              physics: const BouncingScrollPhysics(),
               itemCount: products.length,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 mainAxisSpacing: 16,
                 crossAxisSpacing: 16,
-                childAspectRatio: 0.6,
+                childAspectRatio: 0.5,
               ),
               itemBuilder: (context, index) {
                 final product = products[index];
@@ -71,13 +85,19 @@ class _ProductGridState extends State<ProductGrid> {
                             ),
                             child: Container(
                               color: Colors.grey[200],
-                              child: product.imageUrl != null
+                              child: product.imageUrls != null
                                   ? Image.network(
-                                product.imageUrl!,
+                                product.imageUrls[0]!,
                                 fit: BoxFit.cover,
                                 alignment: Alignment.center,
+                                errorBuilder: (context, error, stackTrace) =>
+                                const Icon(Icons.broken_image, size: 50, color: Colors.grey),
                               )
-                                  : const Icon(Icons.image_not_supported, size: 50), // Image not available
+                                  : const Icon(
+                                Icons.image_not_supported,
+                                size: 50,
+                                color: Colors.grey,
+                              ),
                             ),
                           ),
                         ),
@@ -88,6 +108,8 @@ class _ProductGridState extends State<ProductGrid> {
                             children: [
                               Text(
                                 product.name,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16,
@@ -99,6 +121,7 @@ class _ProductGridState extends State<ProductGrid> {
                                 style: const TextStyle(
                                   color: Colors.teal,
                                   fontSize: 14,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ],

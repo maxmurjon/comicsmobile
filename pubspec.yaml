@@ -15,7 +15,7 @@ dependencies:
   intl_phone_number_input: ^0.7.4
   http: ^1.2.2
   collection: 1.18.0   # Pinning to version 1.18.0
-  shared_preferences: ^2.3.3
+#  shared_preferences: ^2.3.3
 
 dev_dependencies:
   flutter_test:
