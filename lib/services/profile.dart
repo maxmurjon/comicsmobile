@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 
 class ProfileService {
   // Backend API URL
-  final String apiUrl = "http://18.197.178.186:8000/profile";
+  final String apiUrl = "http://3.123.128.20:8000/profile";
 
   // Foydalanuvchi profilini olish
   Future<Map<String, dynamic>?> getProfile(String token, String userId) async {

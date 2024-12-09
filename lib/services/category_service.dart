@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class CategoryService {
-  final String baseUrl = "http://18.197.178.186:8000"; // Asosiy URL
+  final String baseUrl = "http://3.123.128.20:8000"; // Asosiy URL
 
   // Kategoriyalarni olish metodi
   Future<List<Category>> fetchCategories() async {

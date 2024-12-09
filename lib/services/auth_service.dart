@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class AuthService {
-  final String baseUrl = 'http://18.197.178.186:8000'; // Backend URL
+  final String baseUrl = 'http://3.123.128.20:8000'; // Backend URL
 
   // Sign up method
   Future<Map<String, dynamic>> signUp({

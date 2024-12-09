@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ProductService {
-  static const String productUrl = 'http://18.197.178.186:8000/products';
-  static const String imageUrl = 'http://18.197.178.186:8000/productimages';
+  static const String productUrl = 'http://3.123.128.20:8000/products';
+  static const String imageUrl = 'http://3.123.128.20:8000/productimages';
 
   Future<List<Product>> fetchProducts() async {
     try {
@@ -24,7 +24,7 @@ class ProductService {
         final Map<int, List<String>> productImages = {};
         for (var imageJson in imageData['product_image']) {
           final productId = imageJson['product_id'];
-          final imageLink = 'http://18.197.178.186:8000/${imageJson['image_url']}';
+          final imageLink = 'http://3.123.128.20:8000/${imageJson['image_url']}';
           if (!productImages.containsKey(productId)) {
             productImages[productId] = [];
           }
