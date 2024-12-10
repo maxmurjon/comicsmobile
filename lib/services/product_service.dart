@@ -24,7 +24,7 @@ class ProductService {
         final Map<int, List<String>> productImages = {};
         for (var imageJson in imageData['product_image']) {
           final productId = imageJson['product_id'];
-          final imageLink = 'http://3.123.128.20:9000/productimages/${imageJson['image_url']}';
+          final imageLink = 'http://3.123.128.20:9000/${imageJson['image_url']}';
           if (!productImages.containsKey(productId)) {
             productImages[productId] = [];
           }
