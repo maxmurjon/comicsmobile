@@ -1,14 +1,24 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart'; // SharedPreferences import qilish
 import '../data/models/user.dart'; // Yuqoridagi modelni import qilish
 
 class ProfileService {
   static const String baseUrl = 'http://3.123.128.20:8000/user'; // API manzili
-  static String? userId = "51097c15-273a-4ca4-a844-3a49d3789733"; // User IDni saqlash uchun
+  static String? userId; // User IDni saqlash uchun
   static String? token; // Tokenni saqlash uchun
 
+  // SharedPreferences yordamida token va userId-ni o'qish
+  Future<void> loadUserData() async {
+    final prefs = await SharedPreferences.getInstance();
+    userId = prefs.getString('user_id');  // SharedPreferences'dan userId olish
+    token = prefs.getString('token');      // SharedPreferences'dan token olish
+  }
+
+  // User profile ma'lumotlarini olish
   Future<User> getUserProfile() async {
-    if (userId == null ) {
+    // Foydalanuvchi ID va token mavjudligini tekshirish
+    if (userId == null || token == null) {
       throw Exception('User ID va token to\'ldirilmagan.');
     }
 
