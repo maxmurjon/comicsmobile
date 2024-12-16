@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
   static final AuthService _singleton = AuthService._internal();
@@ -15,6 +16,15 @@ class AuthService {
   // Getter methods to access token and userId
   String? get token => _token;
   String? get userId => _userId;
+
+  // Helper method to save token and userId locally using SharedPreferences
+  Future<void> _saveTokenAndUserId(Map<String, dynamic> data) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('token', data['token']);
+    await prefs.setString('user_id', data['user_id']);
+    _token = data['token'];
+    _userId = data['user_id'];
+  }
 
   // Sign up method
   Future<Map<String, dynamic>> signUp({
@@ -44,15 +54,14 @@ class AuthService {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = jsonDecode(response.body);
-        // Save the token and userId
-        _token = data['token'];
-        _userId = data['user_id'];
+        await _saveTokenAndUserId(data); // Save token and userId locally
         return data;
       } else {
-        return {'error': 'Failed to sign up'};
+        final errorData = jsonDecode(response.body);
+        return {'error': errorData['message'] ?? 'Failed to sign up'};
       }
     } catch (e) {
-      return {'error': e.toString()};
+      return {'error': 'Error: ${e.toString()}'};
     }
   }
 
@@ -77,15 +86,23 @@ class AuthService {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = jsonDecode(response.body);
-        // Save the token and userId
-        _token = data['token'];
-        _userId = data['user_id'];
+        await _saveTokenAndUserId(data); // Save token and userId locally
         return data;
       } else {
-        return {'error': 'Invalid credentials'};
+        final errorData = jsonDecode(response.body);
+        return {'error': errorData['message'] ?? 'Invalid credentials'};
       }
     } catch (e) {
-      return {'error': e.toString()};
+      return {'error': 'Error: ${e.toString()}'};
     }
+  }
+
+  // Logout method
+  Future<void> logout() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('token');
+    await prefs.remove('user_id');
+    _token = null;
+    _userId = null;
   }
 }
