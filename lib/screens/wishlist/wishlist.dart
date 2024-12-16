@@ -18,10 +18,6 @@ class _WishlistScreenState extends State<WishlistScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Wishlist'),
-        backgroundColor: const Color(0xFF4d008c),
-      ),
       body: _wishlistItems.isEmpty
           ? const Center(
               child: Text(

@@ -4,7 +4,8 @@ import '../../data/models/product.dart';
 class ProductDetailScreen extends StatefulWidget {
   final Product product;
 
-  const ProductDetailScreen({Key? key, required this.product}) : super(key: key);
+  const ProductDetailScreen({Key? key, required this.product})
+      : super(key: key);
 
   @override
   _ProductDetailScreenState createState() => _ProductDetailScreenState();
@@ -20,7 +21,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       builder: (BuildContext context) {
         return Dialog(
           backgroundColor: Colors.transparent,
-          child: Image.network(imageUrl, fit: BoxFit.cover, height: double.infinity, width: double.infinity),
+          child: Image.network(imageUrl,
+              fit: BoxFit.cover,
+              height: double.infinity,
+              width: double.infinity),
         );
       },
     );
@@ -43,7 +47,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     AspectRatio(
                       aspectRatio: 9 / 16,
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10), // Burchaklarni yumshatish
+                        borderRadius: BorderRadius.circular(
+                            10), // Burchaklarni yumshatish
                         child: PageView.builder(
                           itemCount: widget.product.imageUrls.length,
                           onPageChanged: (index) {
@@ -53,10 +58,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           },
                           itemBuilder: (context, index) {
                             return GestureDetector(
-                              onTap: () => _showFullScreenImage(context, widget.product.imageUrls[index]),
+                              onTap: () => _showFullScreenImage(
+                                  context, widget.product.imageUrls[index]),
                               child: Image.network(
                                 widget.product.imageUrls[index],
-                                fit: BoxFit.cover, // Rasmni gorizontlardan to'liq qamrab olish
+                                fit: BoxFit
+                                    .cover, // Rasmni gorizontlardan to'liq qamrab olish
                               ),
                             );
                           },
@@ -77,19 +84,21 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   ],
                 )
               else
-              // Agar rasmlar bo'lmasa
+                // Agar rasmlar bo'lmasa
                 Container(
                   height: 200,
                   width: double.infinity,
                   color: Colors.grey[300],
-                  child: const Icon(Icons.image_not_supported, size: 100, color: Colors.grey),
+                  child: const Icon(Icons.image_not_supported,
+                      size: 100, color: Colors.grey),
                 ),
               const SizedBox(height: 16),
 
               // Mahsulot nomi
               Text(
                 widget.product.name,
-                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 28),
+                style:
+                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 28),
               ),
               const SizedBox(height: 8),
 
@@ -118,7 +127,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       },
                       child: Container(
                         decoration: BoxDecoration(
-                          color: selectedFormat == 'Digital' ? Color(0xFF4d008c) : Colors.grey[200],
+                          color: selectedFormat == 'Digital'
+                              ? Color(0xFF4d008c)
+                              : Colors.grey[200],
                           borderRadius: BorderRadius.circular(8),
                         ),
                         padding: const EdgeInsets.symmetric(vertical: 12),
@@ -126,7 +137,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           child: Text(
                             'Digital',
                             style: TextStyle(
-                              color: selectedFormat == 'Digital' ? Colors.white : Colors.black,
+                              color: selectedFormat == 'Digital'
+                                  ? Colors.white
+                                  : Colors.black,
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
@@ -146,7 +159,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       },
                       child: Container(
                         decoration: BoxDecoration(
-                          color: selectedFormat == 'Paper' ? Color(0xFF4d008c) : Colors.grey[200],
+                          color: selectedFormat == 'Paper'
+                              ? Color(0xFF4d008c)
+                              : Colors.grey[200],
                           borderRadius: BorderRadius.circular(8),
                         ),
                         padding: const EdgeInsets.symmetric(vertical: 12),
@@ -154,7 +169,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           child: Text(
                             'Paper',
                             style: TextStyle(
-                              color: selectedFormat == 'Paper' ? Colors.white : Colors.black,
+                              color: selectedFormat == 'Paper'
+                                  ? Colors.white
+                                  : Colors.black,
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
@@ -199,7 +216,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 child: const Center(
                   child: Text(
                     'Savatga qo\'shish',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
                   ),
                 ),
               ),

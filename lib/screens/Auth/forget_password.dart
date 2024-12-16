@@ -10,6 +10,6 @@ class ForgetPassword extends StatelessWidget {
   Widget build(BuildContext context) {
     return const CustonScaffold(
       child: const Text("ForgetPassword"),
-    );;
+    );
   }
 }

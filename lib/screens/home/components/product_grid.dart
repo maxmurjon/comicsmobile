@@ -85,7 +85,7 @@ class _ProductGridState extends State<ProductGrid> {
                             ),
                             child: Container(
                               color: Colors.grey[200],
-                              child: product.imageUrls != null
+                              child: null != product.imageUrls
                                   ? Image.network(
                                 product.imageUrls[0]!,
                                 fit: BoxFit.cover,

@@ -2,7 +2,19 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class AuthService {
+  static final AuthService _singleton = AuthService._internal();
+  factory AuthService() => _singleton;
+
+  AuthService._internal();
+
   final String baseUrl = 'http://3.123.128.20:8000'; // Backend URL
+
+  String? _token;
+  String? _userId;
+
+  // Getter methods to access token and userId
+  String? get token => _token;
+  String? get userId => _userId;
 
   // Sign up method
   Future<Map<String, dynamic>> signUp({
@@ -23,10 +35,6 @@ class AuthService {
       'password': password,
     };
 
-    // Print the request data in terminal
-    print('Request Body for SignUp:');
-    print(jsonEncode(body));
-
     try {
       final response = await http.post(
         url,
@@ -34,20 +42,16 @@ class AuthService {
         body: jsonEncode(body),
       );
 
-      // Print the response data in terminal
-      print('Response Status: ${response.statusCode}');
-      print('Response Body: ${response.body}');
-
       if (response.statusCode == 200 || response.statusCode == 201) {
-        // Successfully registered
-        return jsonDecode(response.body);
+        final data = jsonDecode(response.body);
+        // Save the token and userId
+        _token = data['token'];
+        _userId = data['user_id'];
+        return data;
       } else {
-        // Handle error response
         return {'error': 'Failed to sign up'};
       }
     } catch (e) {
-      // Catch network or other errors
-      print('Error: $e');  // Print error in terminal
       return {'error': e.toString()};
     }
   }
@@ -65,27 +69,22 @@ class AuthService {
     };
 
     try {
-      // Request data for sign in
-      print('Request URL for SignIn: $url');
-      print('Request Body: ${jsonEncode(body)}');
-
       final response = await http.post(
         url,
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(body),
       );
 
-      // Print the response data in terminal
-      print('Response Status Code: ${response.statusCode}');
-      print('Response Body: ${response.body}');
-
       if (response.statusCode == 200 || response.statusCode == 201) {
-        return jsonDecode(response.body);
+        final data = jsonDecode(response.body);
+        // Save the token and userId
+        _token = data['token'];
+        _userId = data['user_id'];
+        return data;
       } else {
         return {'error': 'Invalid credentials'};
       }
     } catch (e) {
-      print('Error: $e'); // Print error in terminal
       return {'error': e.toString()};
     }
   }

@@ -1,25 +1,61 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import '../../../services/profile.dart'; // ProfileService import qilish
+import '../../../data/models/user.dart'; // User modelini import qilish
 
-class ProfilePicWithInfo extends StatelessWidget {
-  final String firstName;
-  final String lastName;
-  final String email;
+class ProfilePicWithInfo extends StatefulWidget {
+  const ProfilePicWithInfo({Key? key}) : super(key: key);
 
-  const ProfilePicWithInfo({
-    Key? key,
-    required this.firstName,
-    required this.lastName,
-    required this.email,
-  }) : super(key: key);
+  @override
+  State<ProfilePicWithInfo> createState() => _ProfilePicWithInfoState();
+}
+
+class _ProfilePicWithInfoState extends State<ProfilePicWithInfo> {
+  User? user;
+  bool isLoading = true;
+  bool hasError = false;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUserProfile();
+  }
+
+  Future<void> fetchUserProfile() async {
+    try {
+      final profileService = ProfileService();
+      final fetchedUser = await profileService.getUserProfile();
+
+      setState(() {
+        user = fetchedUser;
+        isLoading = false;
+      });
+    } catch (e) {
+      print('Error in fetchUserProfile: $e');
+      setState(() {
+        hasError = true;
+        isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (hasError || user == null) {
+      return const Center(
+        child: Text('Ma\'lumotlarni yuklashda xatolik yuz berdi.'),
+      );
+    }
+
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30.0), // Chap va o'ng tomonga padding
+      padding: const EdgeInsets.symmetric(horizontal: 30.0),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween, // Ikkala chetga joylashish
-        crossAxisAlignment: CrossAxisAlignment.center, // Vertikal markazlash
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           // Avatar
           SizedBox(
@@ -29,8 +65,8 @@ class ProfilePicWithInfo extends StatelessWidget {
               fit: StackFit.expand,
               clipBehavior: Clip.none,
               children: [
-                const CircleAvatar(
-                  backgroundImage: AssetImage("assets/images/Profile Image.png"),
+                CircleAvatar(
+                  backgroundImage: NetworkImage(user!.imageUrl),
                 ),
                 Positioned(
                   right: -16,
@@ -56,15 +92,15 @@ class ProfilePicWithInfo extends StatelessWidget {
             ),
           ),
 
-          // Ma'lumotlar
+          // User information
           Expanded(
             child: Align(
-              alignment: Alignment.centerRight, // Ma'lumotlarni o'ng chetga joylashtirish
+              alignment: Alignment.centerRight,
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end, // Matnni o'ngga tekislash
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    "$firstName $lastName",
+                    "${user!.firstName} ${user!.lastName}",
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -72,7 +108,7 @@ class ProfilePicWithInfo extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    email,
+                    user!.phoneNumber,
                     style: const TextStyle(
                       fontSize: 14,
                       color: Colors.grey,

@@ -1,32 +1,43 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import '../data/models/user.dart'; // Yuqoridagi modelni import qilish
 
 class ProfileService {
-  // Backend API URL
-  final String apiUrl = "http://3.123.128.20:8000/profile";
+  static const String baseUrl = 'http://3.123.128.20:8000/user'; // API manzili
+  static String? userId = "51097c15-273a-4ca4-a844-3a49d3789733"; // User IDni saqlash uchun
+  static String? token; // Tokenni saqlash uchun
 
-  // Foydalanuvchi profilini olish
-  Future<Map<String, dynamic>?> getProfile(String token, String userId) async {
+  Future<User> getUserProfile() async {
+    if (userId == null ) {
+      throw Exception('User ID va token to\'ldirilmagan.');
+    }
+
+    final url = '$baseUrl/$userId';
+    print('Requesting URL: $url');
+    print('Authorization Token: Bearer $token');
+
     try {
       final response = await http.get(
-        Uri.parse(apiUrl),
+        Uri.parse(url),
         headers: {
           'Authorization': 'Bearer $token', // Tokenni yuborish
-          'user_id': userId, // UserIDni yuborish
         },
       );
 
+      print('Response Code: ${response.statusCode}');
+      print('Response Body: ${response.body}');
+
       if (response.statusCode == 200) {
-        // Agar so'rov muvaffaqiyatli bo'lsa, JSONni qaytarish
-        return jsonDecode(response.body);
+        final data = jsonDecode(response.body);
+        return User.fromJson(data['data']);
       } else {
-        // Xatolik holati
-        print('Failed to load profile: ${response.statusCode}');
-        return null;
+        throw Exception(
+          'Foydalanuvchi ma\'lumotlarini olishda xatolik yuz berdi. Code: ${response.statusCode}',
+        );
       }
     } catch (e) {
-      print('Error: $e');
-      return null;
+      print('Exception: $e');
+      rethrow;
     }
   }
 }

@@ -1,4 +1,6 @@
+import 'package:comics/data/models/user.dart';
 import 'package:flutter/material.dart';
+import '../ProfileDetail/profile_detail.dart';
 import 'components/profile_menu.dart';
 import 'components/profile_pic.dart';
 
@@ -9,20 +11,30 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Mening Hisobim"),
-      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(vertical: 20),
         child: Column(
           children: [
-            const ProfilePicWithInfo(firstName: "Maxmurjon",lastName: "Keldiyorov",email: "mdkgnfg"),
+            const ProfilePicWithInfo(),
             const SizedBox(height: 20),
             ProfileMenu(
-              text: "Malumotlar",
-              icon: "assets/icons/User Icon.svg",
-              press: () => {},
-            ),
+                text: "Malumotlar",
+                icon: "assets/icons/User Icon.svg",
+                press: () => {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ProfileDetailsScreen(
+                            user: User(
+                              firstName: "Maxmurjon",
+                              lastName: "Keldiyorov",
+                              phoneNumber: "+998971153311",
+                              imageUrl: "",
+                            ),
+                          ),
+                        ),
+                      ),
+                    }),
             ProfileMenu(
               text: "Xaridlarim",
               icon: "assets/icons/Shop Icon.svg",

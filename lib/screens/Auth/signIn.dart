@@ -160,7 +160,11 @@ class _SignInScreenState extends State<SignInScreen> {
                                   final token = response['token'];
                                   print('Token: $token');
 
-                                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen()));
+                                  Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => HomeScreen()),
+                                        (Route<dynamic> route) => false,
+                                  );
                                 }
                               } catch (e) {
                                 ScaffoldMessenger.of(context).showSnackBar(

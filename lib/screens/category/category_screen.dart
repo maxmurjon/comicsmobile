@@ -22,9 +22,6 @@ class _CategoryScreenState extends State<CategoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Kategoriyalar"),
-      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: FutureBuilder<List<Category>>(

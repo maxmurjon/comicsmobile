@@ -1,6 +1,6 @@
 import 'package:comics/screens/Auth/welcome.dart';
+import 'package:comics/screens/ProfileDetail/profile_detail.dart';
 import 'package:flutter/material.dart';
-import 'screens/home/home_screen.dart';
 import 'screens/profile_screen/profile_screen.dart';
 import 'screens/category/category_screen.dart';
 import 'screens/wishlist/wishlist.dart';
@@ -22,15 +22,18 @@ class MyApp extends StatelessWidget {
       onGenerateRoute: (settings) {
         switch (settings.name) {
           case '/':
-            return MaterialPageRoute(builder: (context) => const WelcomeScreen());
+            return MaterialPageRoute(builder: (context) => WelcomeScreen());
           case '/profile':
-            return MaterialPageRoute(builder: (context) => const ProfileScreen());
+            return MaterialPageRoute(
+                builder: (context) => const ProfileScreen());
           case '/category':
-            return MaterialPageRoute(builder: (context) => const CategoryScreen());
+            return MaterialPageRoute(
+                builder: (context) => const CategoryScreen());
           case '/wishlist':
-            return MaterialPageRoute(builder: (context) => const WishlistScreen());
+            return MaterialPageRoute(
+                builder: (context) => const WishlistScreen());
           case '/product':
-          // Dinamik argument: Mahsulot ID olish
+            // Dinamik argument: Mahsulot ID olish
             final productId = settings.arguments as String;
             return MaterialPageRoute(
               builder: (context) => ComicDetailScreen(productId: productId),
