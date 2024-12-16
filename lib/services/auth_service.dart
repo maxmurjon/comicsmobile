@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shared_preferences/shared_preferences.dart'; // Import shared_preferences
 
 class AuthService {
   static final AuthService _singleton = AuthService._internal();
@@ -17,13 +17,18 @@ class AuthService {
   String? get token => _token;
   String? get userId => _userId;
 
-  // Helper method to save token and userId locally using SharedPreferences
-  Future<void> _saveTokenAndUserId(Map<String, dynamic> data) async {
+  // Save token and userId to shared preferences
+  Future<void> _saveAuthData(String token, String userId) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('token', data['token']);
-    await prefs.setString('user_id', data['user_id']);
-    _token = data['token'];
-    _userId = data['user_id'];
+    await prefs.setString('token', token);
+    await prefs.setString('userId', userId);
+  }
+
+  // Load token and userId from shared preferences
+  Future<void> _loadAuthData() async {
+    final prefs = await SharedPreferences.getInstance();
+    _token = prefs.getString('token');
+    _userId = prefs.getString('userId');
   }
 
   // Sign up method
@@ -54,14 +59,14 @@ class AuthService {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = jsonDecode(response.body);
-        await _saveTokenAndUserId(data); // Save token and userId locally
+        // Save the token and userId to shared preferences
+        await _saveAuthData(data['token'], data['user_id']);
         return data;
       } else {
-        final errorData = jsonDecode(response.body);
-        return {'error': errorData['message'] ?? 'Failed to sign up'};
+        return {'error': 'Failed to sign up'};
       }
     } catch (e) {
-      return {'error': 'Error: ${e.toString()}'};
+      return {'error': e.toString()};
     }
   }
 
@@ -86,23 +91,26 @@ class AuthService {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = jsonDecode(response.body);
-        await _saveTokenAndUserId(data); // Save token and userId locally
+        // Save the token and userId to shared preferences
+        await _saveAuthData(data['token'], data['user_id']);
         return data;
       } else {
-        final errorData = jsonDecode(response.body);
-        return {'error': errorData['message'] ?? 'Invalid credentials'};
+        return {'error': 'Invalid credentials'};
       }
     } catch (e) {
-      return {'error': 'Error: ${e.toString()}'};
+      return {'error': e.toString()};
     }
   }
 
-  // Logout method
-  Future<void> logout() async {
+  // Load auth data when the app starts
+  Future<void> loadAuthData() async {
+    await _loadAuthData();
+  }
+
+  // Clear auth data
+  Future<void> clearAuthData() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('token');
-    await prefs.remove('user_id');
-    _token = null;
-    _userId = null;
+    await prefs.remove('userId');
   }
 }
